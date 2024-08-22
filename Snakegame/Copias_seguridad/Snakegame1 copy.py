@@ -4,20 +4,17 @@ from pygame import Vector2
 import Menu
 
 class SNAKE:
-    def __init__(self, size, number, screen):
-        self.screen = screen
-        self.cell_number = number
-        self.cell_size = size
+    def __init__(self):
         #Almacena las coordenadas de los cuadrados dentro de la lista
         self.body = [Vector2(5,10),Vector2(4,10), Vector2(3,10)]
         self.direction = Vector2(1,0)
 
     def draw_snake(self):
         for block in self.body:
-            x_pos = int(block.x*self.cell_size)
-            y_pos = int(block.y*self.cell_size)
-            snake_rect = pygame.Rect(x_pos, y_pos, self.cell_size, self.cell_size)
-            pygame.draw.rect(self.screen, (126,111,114), snake_rect)
+            x_pos = int(block.x*cell_size)
+            y_pos = int(block.y*cell_size)
+            snake_rect = pygame.Rect(x_pos, y_pos, cell_size, cell_size)
+            pygame.draw.rect(screen, (126,111,114), snake_rect)
 
     def move_snake(self):
 
@@ -27,33 +24,27 @@ class SNAKE:
 
 
 class FRUIT:
-    def __init__(self, size, number, screen):
-        self.screen = screen
-        self.cell_number = number
-        self.cell_size = size
-        self.x = random.randint(0, self.cell_number - 1)
-        self.y = random.randint(0, self.cell_number - 1)
+    def __init__(self):
+        self.x = random.randint(0, cell_number - 1)
+        self.y = random.randint(0, cell_number - 1)
         self.pos = Vector2(self.x, self.y)
         self.fruit_image = pygame.image.load('Assets/30.png').convert_alpha()
-        self.fruit_image = pygame.transform.scale(self.fruit_image, (self.cell_size, self.cell_size))
+        self.fruit_image = pygame.transform.scale(self.fruit_image, (cell_size, cell_size))
 
     def draw_fruit(self):
-        fruit_rect = pygame.Rect(int(self.pos.x * self.cell_size), int(self.pos.y * self.cell_size), self.cell_size, self.cell_size)
-        self.screen.blit(self.fruit_image, fruit_rect)
+        fruit_rect = pygame.Rect(int(self.pos.x * cell_size), int(self.pos.y * cell_size), cell_size, cell_size)
+        screen.blit(self.fruit_image, fruit_rect)
         #pygame.draw.rect(screen, (126,166,114), fruit_rect)
 
     def update_pos(self):
-        self.x = random.randint(0, self.cell_number - 1)
-        self.y = random.randint(0, self.cell_number - 1)
+        self.x = random.randint(0, cell_number - 1)
+        self.y = random.randint(0, cell_number - 1)
         self.pos = Vector2(self.x, self.y)
 
 class MAIN:
-    def __init__(self, size, number, screen):
-        self.screen = screen
-        self.size = size
-        self.number = number
-        self.snake = SNAKE(self.size, self.number, self.screen)
-        self.fruit = FRUIT(self.size, self.number, self.screen)
+    def __init__(self):
+        self.snake = SNAKE()
+        self.fruit = FRUIT()
 
     def update(self):
         self.snake.move_snake()
@@ -71,7 +62,7 @@ class MAIN:
 
     def check_fails(self):
         #Saber si sale de la pantalla
-        if not 0 <= self.snake.body[0].x < self.number or not 0 <= self.snake.body[0].y < self.number: 
+        if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number: 
             self.game_over()
 
         #Saber si choca con su propio cuerpo
@@ -83,7 +74,7 @@ class MAIN:
     def game_over(self):
         Menu.main()
 
-def principal():
+if __name__ == '__main__':  #Esto sirve para que el juego inicie solo si es abierto desde el archivo principal
     pygame.init()
     cell_size = 40
     cell_number = 20
@@ -92,10 +83,13 @@ def principal():
     bg = (175,215,70)
     clock = pygame.time.Clock()
 
+    fruit= FRUIT()
+    snake = SNAKE()
+
     SCREEN_UPDATE = pygame.USEREVENT
     pygame.time.set_timer(SCREEN_UPDATE, 80)
 
-    main_game = MAIN(cell_size, cell_number, screen)
+    main_game = MAIN()
 
     while running:
 
@@ -126,5 +120,4 @@ def principal():
     pygame.quit()
 
     
-if __name__ == '__main__':  #Esto sirve para que el juego inicie solo si es abierto desde el archivo principal
-    principal()
+    
