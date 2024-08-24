@@ -2,6 +2,9 @@ import pygame
 import random
 from pygame import Vector2
 import Menu
+import Puntos
+from os import listdir
+from os.path import isfile, join
 
 class SNAKE:
     def __init__(self, size, number, screen):
@@ -34,7 +37,10 @@ class FRUIT:
         self.x = random.randint(0, self.cell_number - 1)
         self.y = random.randint(0, self.cell_number - 1)
         self.pos = Vector2(self.x, self.y)
-        self.fruit_image = pygame.image.load('Assets/30.png').convert_alpha()
+        self.fruits = [f for f in listdir('Assets/') if isfile(join('Assets/', f))]
+        self.choice = random.choice(self.fruits)
+        self.path = f'Assets/{self.choice}'
+        self.fruit_image = pygame.image.load(self.path).convert_alpha()
         self.fruit_image = pygame.transform.scale(self.fruit_image, (self.cell_size, self.cell_size))
 
     def draw_fruit(self):
@@ -48,12 +54,13 @@ class FRUIT:
         self.pos = Vector2(self.x, self.y)
 
 class MAIN:
-    def __init__(self, size, number, screen):
+    def __init__(self, size, number, screen, puntos):
         self.screen = screen
         self.size = size
         self.number = number
         self.snake = SNAKE(self.size, self.number, self.screen)
         self.fruit = FRUIT(self.size, self.number, self.screen)
+        self.puntos = puntos
 
     def update(self):
         self.snake.move_snake()
@@ -68,6 +75,7 @@ class MAIN:
         if self.snake.body[0] == self.fruit.pos:
             self.fruit.update_pos()
             self.snake.body.append(self.snake.body[-1]) #Agregamos el ultimo elemento en la ultima posicion para simular el efecto de que incrementamos el tamanio de la serpiente
+            self.puntos.contador()
 
     def check_fails(self):
         #Saber si sale de la pantalla
@@ -81,7 +89,8 @@ class MAIN:
 
 
     def game_over(self):
-        Menu.main()
+        play = False
+        Menu.main(play)
 
 def principal():
     pygame.init()
@@ -91,13 +100,15 @@ def principal():
     running = True
     bg = (175,215,70)
     clock = pygame.time.Clock()
+    puntos = Puntos.puntos(screen, Vector2(0, 0), cell_size, cell_number)
 
     SCREEN_UPDATE = pygame.USEREVENT
     pygame.time.set_timer(SCREEN_UPDATE, 80)
 
-    main_game = MAIN(cell_size, cell_number, screen)
+    main_game = MAIN(cell_size, cell_number, screen, puntos)
 
     while running:
+        screen.fill(bg)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -116,8 +127,7 @@ def principal():
                 if key[pygame.K_d] and main_game.snake.direction.x != -1:
                     main_game.snake.direction = Vector2(1, 0)
 
-        screen.fill(bg)
-
+        puntos.draw()
         main_game.draw_elements()
         pygame.display.flip()
         clock.tick(60)
