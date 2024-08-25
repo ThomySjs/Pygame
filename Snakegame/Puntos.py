@@ -1,6 +1,5 @@
 import pygame
 
-
 class puntos():
     def __init__(self, screen, cords, size, number):
         self.screen = screen
@@ -13,6 +12,7 @@ class puntos():
 
 
     def draw(self):
+        pygame.init()
         self.img = self.font.render(f'Puntos: {self.puntos}', True, self.color)
 
         key = pygame.key.get_pressed()

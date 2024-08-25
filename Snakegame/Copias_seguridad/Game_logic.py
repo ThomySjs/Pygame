@@ -61,7 +61,6 @@ class MAIN:
         self.snake = SNAKE(self.size, self.number, self.screen)
         self.fruit = FRUIT(self.size, self.number, self.screen)
         self.puntos = puntos
-        self.game_oveR = False
 
     def update(self):
         self.snake.move_snake()
@@ -90,7 +89,8 @@ class MAIN:
 
 
     def game_over(self):
-        self.game_oveR = True
+        play = False
+        Menu.main(play)
 
 def principal():
     pygame.init()
@@ -106,7 +106,6 @@ def principal():
     pygame.time.set_timer(SCREEN_UPDATE, 80)
 
     main_game = MAIN(cell_size, cell_number, screen, puntos)
-
 
     while running:
         screen.fill(bg)
@@ -132,11 +131,6 @@ def principal():
         main_game.draw_elements()
         pygame.display.flip()
         clock.tick(60)
-        if main_game.game_oveR:
-            running = False
-    play = False
-    Menu.main(play)
-
 
     
 if __name__ == '__main__':  #Esto sirve para que el juego inicie solo si es abierto desde el archivo principal

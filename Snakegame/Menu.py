@@ -4,8 +4,6 @@ import Game_logic
 import Puntos
 import Sonido
 
-
-
 class Button():
     def __init__(self, cords,  img, scale, size, number, screen):
         self.size = size
@@ -40,8 +38,6 @@ class Button():
 
         return action
 
-
-
 def main(music):
 
         pygame.init()
@@ -65,12 +61,15 @@ def main(music):
         start = Button(Vector2(10, 8), start_img, 0.7, cell_size, cell_number, screen)
         exitA =Button(Vector2(10, 11), exit_img, 0.7, cell_size, cell_number, screen)
 
+        over = False
+
         while running:
 
             screen.fill(bg)
 
             if start.draw_button():
-                Game_logic.principal()
+                over = True
+                running = False
             if exitA.draw_button():
                 running = False
 
@@ -88,6 +87,8 @@ def main(music):
                 
 
             pygame.display.flip()
+        if over:
+            Game_logic.principal() #Esto es para salir del bucle antes de llamar a la nueva ventana.
 
         pygame.quit()
 
